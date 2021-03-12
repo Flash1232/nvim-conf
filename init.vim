@@ -172,7 +172,7 @@ function! LspStatus() abort
 endfunction
 
 " let g:airline_powerline_fonts = 1
-
+let g:airline#extensions#tabline#enabled = 1
 " Code navigation shortcuts as found in :help lsp
 nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
