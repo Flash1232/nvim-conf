@@ -1,14 +1,43 @@
 call plug#begin(stdpath('data') . '/plugged')
 
 Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/nvim-compe'
+Plug 'glepnir/lspsaga.nvim'
+Plug 'onsails/lspkind-nvim'
 
 Plug 'anott03/nvim-lspinstall'
+Plug 'alexaandru/nvim-lspupdate'
+Plug 'mattn/vim-lsp-settings'
 
 " Extentions to built-in LSP, for example, providing type inlay hints
 Plug 'nvim-lua/lsp_extensions.nvim'
 
 " Autocompletion framework for built-in LSP
-Plug 'nvim-lua/completion-nvim'
+" Plug 'nvim-lua/completion-nvim'
+
+Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-treesitter/playground'
+Plug 'jiangmiao/auto-pairs'
+Plug 'mhinz/vim-startify'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+Plug 'cespare/vim-toml'
+Plug 'stephpy/vim-yaml'
+" Plug 'rust-lang/rust.vim'
+Plug 'rhysd/vim-clang-format'
+
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-media-files.nvim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
+
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+Plug 'junegunn/gv.vim'
+Plug 'rhysd/git-messenger.vim'
 
 call plug#end()
 
@@ -20,9 +49,39 @@ set completeopt=menuone,noinsert,noselect
 " Avoid showing extra messages when using completion
 set shortmess+=c
 
+set guioptions-=T " Remove toolbar"
+set backspace=2 " Backspace over newlines
+set nofoldenable
+set ttyfast
+" https://github.com/vim/vim/issues/1735#issuecomment-383353563
+set lazyredraw
+set synmaxcol=500
+set laststatus=2
+set number " Also show current absolute line
+set diffopt+=iwhite " No whitespace in vimdiff
+" Make diffing better: https://vimways.org/2018/the-power-of-diff/
+set diffopt+=algorithm:patience
+set diffopt+=indent-heuristic
+set colorcolumn=80 " and give me a colored column
+set showcmd " Show (partial) command in status line.
+set mouse=a " Enable mouse usage (all modes) in terminals
 
-" Configure lsp
-" https://github.com/neovim/nvim-lspconfig#rust_analyzer
+" No arrow keys --- force yourself to use the home row
+nnoremap <up> <nop>
+nnoremap <down> <nop>
+inoremap <up> <nop>
+inoremap <down> <nop>
+inoremap <left> <nop>
+inoremap <right> <nop>
+
+" Left and right can switch buffers
+nnoremap <left> :bp<CR>
+nnoremap <right> :bn<CR>
+
+" Move by line
+" nnoremap j gj
+" nnoremap k gk
+
 lua <<EOF
 
 -- nvim_lsp object
@@ -30,11 +89,12 @@ local nvim_lsp = require'lspconfig'
 
 -- function to attach completion when setting up lsp
 local on_attach = function(client)
-  require'completion'.on_attach(client)
+--  require'completion'.on_attach(client)
 end
 
 -- Enable rust_analyzer
 nvim_lsp.rust_analyzer.setup({ on_attach=on_attach, settings={['rust-analyzer']={checkOnSave={extraArgs={"--target-dir", "/tmp/rust-analyzer-check"}}}} })
+nvim_lsp.clangd.setup{}
 
 -- Enable diagnostics
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -44,6 +104,38 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     update_in_insert = true,
   }
 )
+require'telescope'.setup{}
+require'telescope'.load_extension('fzy_native')
+require'telescope'.load_extension('media_files')
+
+require'compe'.setup {
+  enabled = true;
+  autocomplete = true;
+  debug = false;
+  min_length = 1;
+  preselect = 'enable';
+  throttle_time = 80;
+  source_timeout = 200;
+  incomplete_delay = 400;
+  allow_prefix_unmatch = false;
+  max_abbr_width = 1000;
+  max_kind_width = 1000;
+  max_menu_width = 1000000;
+  documentation = true;
+
+  source = {
+    path = true;
+    buffer = true;
+    calc = true;
+    -- vsnip = true;
+    nvim_lsp = true;
+    nvim_lua = true;
+    spell = true;
+    tags = true;
+    snippets_nvim = true;
+    treesitter = true;
+  };
+}
 EOF
 
 " Code navigation shortcuts as found in :help lsp
@@ -66,6 +158,20 @@ nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>lua require'telescope.builtin'.find_files()<CR>
+nnoremap <leader>fg <cmd>lua require'telescope.builtin'.live_grep()<CR>
+nnoremap <leader>fb <cmd>lua require'telescope.builtin'.buffers()<CR>
+nnoremap <leader>fh <cmd>lua require'telescope.builtin'.help_tags()<CR>
+
+nnoremap ö <Esc> 
+inoremap ö <Esc>
+" vnoremap ö <esc>         " Remap in Visual and Select mode
+" xnoremap ö <esc>         " Remap in Visual mode
+" snoremap ö <esc>         " Remap in Select mode
+" cnoremap ö <C-C>         " Remap in Command-line mode
+" onoremap ö <esc>         " Remap in Operator pending mode
+
 " use <Tab> as trigger keys
 imap <Tab> <Plug>(completion_smart_tab)
 imap <S-Tab> <Plug>(completion_smart_s_tab)
@@ -73,6 +179,24 @@ imap <S-Tab> <Plug>(completion_smart_s_tab)
 " have a fixed column for the diagnostics to appear in
 " this removes the jitter when warnings/errors flow in
 set signcolumn=yes
+set statusline+=%{FugitiveStatusline()}
+
+" Prevent accidental writes to buffers that shouldn't be edited
+autocmd BufRead *.orig set readonly
+autocmd BufRead *.pacnew set readonly
+
+" Leave paste mode when leaving insert mode
+autocmd InsertLeave * set nopaste
+
+" Jump to last edit position on opening file
+if has("autocmd")
+  " https://stackoverflow.com/questions/31449496/vim-ignore-specifc-file-in-autocommand
+  " au BufReadPost * if expand('%:p') !~# '\m/\.git/' && line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
+
+" Follow Rust code style rules
+" au Filetype rust source ~/.config/nvim/scripts/spacetab.vim
+" au Filetype rust set colorcolumn=100
 
 " Set updatetime for CursorHold
 " 300ms of no cursor movement to trigger CursorHold
