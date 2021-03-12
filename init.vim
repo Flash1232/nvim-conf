@@ -33,6 +33,8 @@ Plug 'nvim-telescope/telescope-media-files.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'BurntSushi/ripgrep'
 " Plug 'sharkdp/fd'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
+Plug 'junegunn/fzf.vim'
 
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
@@ -50,9 +52,9 @@ set completeopt=menuone,noinsert,noselect
 " Avoid showing extra messages when using completion
 set shortmess+=c
 
-set shiftwidth=2
-set autoindent
-set smartindent
+set cindent shiftwidth=2
+set cindent autoindent
+set cindent smartindent
 
 " set guioptions-=T " Remove toolbar"
 set backspace=2 " Backspace over newlines
@@ -204,9 +206,9 @@ nnoremap <leader>fl <cmd>Telescope git_files<CR>
 
 cnoremap kj <Esc> 
 inoremap kj <Esc>
-" vnoremap ö <esc>         " Remap in Visual and Select mode
-" xnoremap ö <esc>         " Remap in Visual mode
-" snoremap ö <esc>         " Remap in Select mode
+vnoremap kj <Esc>         " Remap in Visual and Select mode
+xnoremap kj <Esc>         " Remap in Visual mode
+snoremap kj <Esc>         " Remap in Select mode
 " cnoremap ö <C-C>         " Remap in Command-line mode
 " onoremap ö <esc>         " Remap in Operator pending mode
 
