@@ -25,6 +25,7 @@ Plug 'cespare/vim-toml'
 Plug 'stephpy/vim-yaml'
 " Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
+Plug 'cdelledonne/vim-cmake'
 
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
