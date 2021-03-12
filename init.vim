@@ -12,6 +12,7 @@ Plug 'alexaandru/nvim-lspupdate'
 " Extentions to built-in LSP, for example, providing type inlay hints
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'nvim-lua/lsp-status.nvim'
+" Plug 'ryanoasis/vim-devicons'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 Plug 'nvim-treesitter/playground'
@@ -48,6 +49,10 @@ set completeopt=menuone,noinsert,noselect
 
 " Avoid showing extra messages when using completion
 set shortmess+=c
+
+set shiftwidth=2
+set autoindent
+set smartindent
 
 " set guioptions-=T " Remove toolbar"
 set backspace=2 " Backspace over newlines
@@ -164,6 +169,8 @@ function! LspStatus() abort
   return ''
 endfunction
 
+" let g:airline_powerline_fonts = 1
+
 " Code navigation shortcuts as found in :help lsp
 nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
@@ -212,6 +219,10 @@ inoremap kj <Esc>
 set signcolumn=yes
 set statusline+=%{FugitiveStatusline()}
 highlight! link SignColumn LineNr
+" if !exists('g:airline_symbols')
+"   let g:airline_symbols = {}
+" endif
+" let g:airline_symbols.space = "\ua0"
 
 " Prevent accidental writes to buffers that shouldn't be edited
 autocmd BufRead *.orig set readonly
