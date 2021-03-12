@@ -7,15 +7,13 @@ Plug 'onsails/lspkind-nvim'
 
 Plug 'anott03/nvim-lspinstall'
 Plug 'alexaandru/nvim-lspupdate'
-Plug 'mattn/vim-lsp-settings'
+" Plug 'mattn/vim-lsp-settings'
 
 " Extentions to built-in LSP, for example, providing type inlay hints
 Plug 'nvim-lua/lsp_extensions.nvim'
+Plug 'nvim-lua/lsp-status.nvim'
 
-" Autocompletion framework for built-in LSP
-" Plug 'nvim-lua/completion-nvim'
-
-Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 Plug 'nvim-treesitter/playground'
 Plug 'jiangmiao/auto-pairs'
 Plug 'mhinz/vim-startify'
@@ -32,6 +30,8 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-media-files.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
+Plug 'BurntSushi/ripgrep'
+" Plug 'sharkdp/fd'
 
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
@@ -49,10 +49,10 @@ set completeopt=menuone,noinsert,noselect
 " Avoid showing extra messages when using completion
 set shortmess+=c
 
-set guioptions-=T " Remove toolbar"
+" set guioptions-=T " Remove toolbar"
 set backspace=2 " Backspace over newlines
 set nofoldenable
-set ttyfast
+" set ttyfast
 " https://github.com/vim/vim/issues/1735#issuecomment-383353563
 set lazyredraw
 set synmaxcol=500
@@ -79,24 +79,41 @@ nnoremap <left> :bp<CR>
 nnoremap <right> :bn<CR>
 
 " Move by line
-" nnoremap j gj
-" nnoremap k gk
+nnoremap j gj
+nnoremap k gk
 
 lua <<EOF
-
 -- nvim_lsp object
 local nvim_lsp = require'lspconfig'
+local lsp_status = require'lsp-status'
+require'lspsaga'.init_lsp_saga()
 
--- function to attach completion when setting up lsp
 local on_attach = function(client)
---  require'completion'.on_attach(client)
+  lsp_status.on_attach(client)
 end
 
--- Enable rust_analyzer
-nvim_lsp.rust_analyzer.setup({ on_attach=on_attach, settings={['rust-analyzer']={checkOnSave={extraArgs={"--target-dir", "/tmp/rust-analyzer-check"}}}} })
-nvim_lsp.clangd.setup{}
+lsp_status.register_progress()
 
--- Enable diagnostics
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  highlight = {
+      enable = true              -- false will disable the whole extension
+  },
+}
+
+-- Enable rust_analyzer
+nvim_lsp.rust_analyzer.setup({ on_attach=on_attach, settings={['rust-analyzer']={checkOnSave={extraArgs={"--target-dir", "/tmp/rust-analyzer-check"}}}}, capabilities=lsp_status.capabilities })
+
+nvim_lsp.clangd.setup{
+  handlers = lsp_status.extensions.clangd.setup(),
+  init_options = {
+    clangdFileStatus = true
+  },
+  on_attach = lsp_status.on_attach,
+  capabilities = lsp_status.capabilities
+}
+
+-- Enable Rust diagnostics
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     virtual_text = false,
@@ -138,6 +155,15 @@ require'compe'.setup {
 }
 EOF
 
+" Statusline
+function! LspStatus() abort
+  if luaeval('#vim.lsp.buf_get_clients() > 0')
+    return luaeval("require('lsp-status').status()")
+  endif
+
+  return ''
+endfunction
+
 " Code navigation shortcuts as found in :help lsp
 nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
@@ -159,13 +185,18 @@ inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " Find files using Telescope command-line sugar.
-nnoremap <leader>ff <cmd>lua require'telescope.builtin'.find_files()<CR>
-nnoremap <leader>fg <cmd>lua require'telescope.builtin'.live_grep()<CR>
-nnoremap <leader>fb <cmd>lua require'telescope.builtin'.buffers()<CR>
-nnoremap <leader>fh <cmd>lua require'telescope.builtin'.help_tags()<CR>
+" nnoremap <leader>ff <cmd>lua require'telescope.builtin'.find_files()<CR>
+" nnoremap <leader>fg <cmd>lua require'telescope.builtin'.live_grep()<CR>
+" nnoremap <leader>fb <cmd>lua require'telescope.builtin'.buffers()<CR>
+" nnoremap <leader>fh <cmd>lua require'telescope.builtin'.help_tags()<CR>
+nnoremap <leader>ff <cmd>Telescope find_files<CR>
+nnoremap <leader>fg <cmd>Telescope live_grep<CR>
+nnoremap <leader>fb <cmd>Telescope buffers<CR>
+nnoremap <leader>fh <cmd>Telescope help_tags<CR>
+nnoremap <leader>fl <cmd>Telescope git_files<CR>
 
-nnoremap ö <Esc> 
-inoremap ö <Esc>
+cnoremap kj <Esc> 
+inoremap kj <Esc>
 " vnoremap ö <esc>         " Remap in Visual and Select mode
 " xnoremap ö <esc>         " Remap in Visual mode
 " snoremap ö <esc>         " Remap in Select mode
@@ -173,13 +204,14 @@ inoremap ö <Esc>
 " onoremap ö <esc>         " Remap in Operator pending mode
 
 " use <Tab> as trigger keys
-imap <Tab> <Plug>(completion_smart_tab)
-imap <S-Tab> <Plug>(completion_smart_s_tab)
+" imap <Tab> <Plug>(completion_smart_tab)
+" imap <S-Tab> <Plug>(completion_smart_s_tab)
 
 " have a fixed column for the diagnostics to appear in
 " this removes the jitter when warnings/errors flow in
 set signcolumn=yes
 set statusline+=%{FugitiveStatusline()}
+highlight! link SignColumn LineNr
 
 " Prevent accidental writes to buffers that shouldn't be edited
 autocmd BufRead *.orig set readonly
@@ -210,4 +242,4 @@ nnoremap <silent> g] <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
 
 " Enable type inlay hints
 autocmd CursorMoved,InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs
- \ lua require'lsp_extensions'.inlay_hints{ prefix = '', highlight = "Comment", enabled = {"TypeHint", "ChainingHint", "ParameterHint"} }
+ \ lua require'lsp_extensions'.inlay_hints{ prefix = ' » ', highlight = "Comment", enabled = {"TypeHint", "ChainingHint", "ParameterHint"} }
