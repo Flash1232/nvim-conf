@@ -30,7 +30,7 @@ Plug 'cdelledonne/vim-cmake'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-telescope/telescope-media-files.nvim'
+" Plug 'nvim-telescope/telescope-media-files.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'BurntSushi/ripgrep'
 " Plug 'sharkdp/fd'
@@ -70,7 +70,7 @@ set diffopt+=iwhite " No whitespace in vimdiff
 " Make diffing better: https://vimways.org/2018/the-power-of-diff/
 set diffopt+=algorithm:patience
 set diffopt+=indent-heuristic
-set colorcolumn=80 " and give me a colored column
+set colorcolumn=100 " and give me a colored column
 set showcmd " Show (partial) command in status line.
 set mouse=a " Enable mouse usage (all modes) in terminals
 
@@ -129,9 +129,27 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     update_in_insert = true,
   }
 )
-require'telescope'.setup{}
+
+-- Setup Telescope
+require'telescope'.setup{
+  defaults = {
+    file_sorter = require'telescope.sorters'.get_fzy_sorter,
+    prompt_prefix = ' >',
+    color_devicons = true,
+
+    file_previewer   = require'telescope.previewers'.vim_buffer_cat.new,
+    grep_previewer   = require'telescope.previewers'.vim_buffer_vimgrep.new,
+    qflist_previewer   = require'telescope.previewers'.vim_buffer_qflist.new,
+  },
+  extensions = {
+    fzy_native = {
+      override_generic_sorter = false,
+      override_file_sorter = true,
+    }
+  }
+}
 require'telescope'.load_extension('fzy_native')
-require'telescope'.load_extension('media_files')
+-- require'telescope'.load_extension('media_files')
 
 require'compe'.setup {
   enabled = true;
@@ -174,6 +192,7 @@ endfunction
 
 " let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+
 " Code navigation shortcuts as found in :help lsp
 nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
@@ -196,9 +215,6 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " Find files using Telescope command-line sugar.
 " nnoremap <leader>ff <cmd>lua require'telescope.builtin'.find_files()<CR>
-" nnoremap <leader>fg <cmd>lua require'telescope.builtin'.live_grep()<CR>
-" nnoremap <leader>fb <cmd>lua require'telescope.builtin'.buffers()<CR>
-" nnoremap <leader>fh <cmd>lua require'telescope.builtin'.help_tags()<CR>
 nnoremap <leader>ff <cmd>Telescope find_files<CR>
 nnoremap <leader>fg <cmd>Telescope live_grep<CR>
 nnoremap <leader>fb <cmd>Telescope buffers<CR>
@@ -222,6 +238,7 @@ snoremap kj <Esc>         " Remap in Select mode
 set signcolumn=yes
 set statusline+=%{FugitiveStatusline()}
 highlight! link SignColumn LineNr
+
 " if !exists('g:airline_symbols')
 "   let g:airline_symbols = {}
 " endif
