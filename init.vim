@@ -93,15 +93,15 @@ nnoremap k gk
 lua <<EOF
 -- nvim_lsp object
 local nvim_lsp = require'lspconfig'
+
+-- Setup lsp-status
 local lsp_status = require'lsp-status'
-require'lspsaga'.init_lsp_saga()
-
-local on_attach = function(client)
-  lsp_status.on_attach(client)
-end
-
 lsp_status.register_progress()
 
+-- Setup lspsaga
+require'lspsaga'.init_lsp_saga()
+
+-- Setup nvim_treesitter
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   highlight = {
@@ -110,8 +110,25 @@ require'nvim-treesitter.configs'.setup {
 }
 
 -- Enable rust_analyzer
-nvim_lsp.rust_analyzer.setup({ on_attach=on_attach, settings={['rust-analyzer']={checkOnSave={extraArgs={"--target-dir", "/tmp/rust-analyzer-check"}}}}, capabilities=lsp_status.capabilities })
+local on_attach = function(client)
+  lsp_status.on_attach(client)
+end
 
+nvim_lsp.rust_analyzer.setup({
+  on_attach = on_attach,
+  settings = {
+    ['rust-analyzer'] = {
+      checkOnSave = {
+        extraArgs = {
+          "--target-dir", "/tmp/rust-analyzer-check"
+        }
+      }
+    }
+  },
+  capabilities = lsp_status.capabilities
+})
+
+-- Setup ClangD
 nvim_lsp.clangd.setup{
   handlers = lsp_status.extensions.clangd.setup(),
   init_options = {
@@ -151,6 +168,7 @@ require'telescope'.setup{
 require'telescope'.load_extension('fzy_native')
 -- require'telescope'.load_extension('media_files')
 
+-- Setup compe
 require'compe'.setup {
   enabled = true;
   autocomplete = true;
