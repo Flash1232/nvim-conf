@@ -2,11 +2,11 @@ call plug#begin(stdpath('data') . '/plugged')
 
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
-Plug 'glepnir/lspsaga.nvim'
+Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 Plug 'onsails/lspkind-nvim'
 
 Plug 'anott03/nvim-lspinstall'
-Plug 'alexaandru/nvim-lspupdate'
+Plug 'alexaandru/nvim-lspupdate', { 'branch': 'main' }
 " Plug 'mattn/vim-lsp-settings'
 
 " Extentions to built-in LSP, for example, providing type inlay hints
