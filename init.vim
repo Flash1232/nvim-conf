@@ -55,19 +55,38 @@ filetype plugin indent on
 colorscheme snazzy
 
 set completeopt=menuone,noinsert,noselect
+set hidden
+set nowrap
+set whichwrap+=<,>,[,],h,l
+set iskeyword+=-
 
 " Avoid showing extra messages when using completion
 set shortmess+=c
 
-set cindent shiftwidth=2
-set cindent autoindent
-set cindent smartindent
+set tabstop=2
+set shiftwidth=2
+set smarttab
+set expandtab
+set smartindent
+set autoindent
+set showtabline=2
 
-highlight Pmenu guibg=brown gui=bold
+" set cindent shiftwidth=2
+" set cindent autoindent
+" set cindent smartindent
+
+highlight Pmenu guibg=black gui=bold
 
 " set guioptions-=T " Remove toolbar"
 set backspace=2 " Backspace over newlines
 set nofoldenable
+set noshowmode
+set cursorline
+set ruler
+set cmdheight=2
+set t_Co="256"
+set conceallevel=0
+set signcolumn=yes
 let g:nvcode_termcolors=256
 if (has("termguicolors"))
   set termguicolors
@@ -86,6 +105,8 @@ set diffopt+=indent-heuristic
 set colorcolumn=100 " and give me a colored column
 set showcmd " Show (partial) command in status line.
 set mouse=a " Enable mouse usage (all modes) in terminals
+set clipboard="unnamedplus"
+set incsearch
 
 " No arrow keys --- force yourself to use the home row
 nnoremap <up> <nop>
@@ -254,7 +275,6 @@ endfunction
 
 let g:airline_powerline_fonts = 1
 " let g:airline_theme = 'onedark'
-set noshowmode
 let g:airline#extensions#tabline#enabled = 1
 
 nnoremap <silent> <leader> :<c-u>WhichKey '<leader>'<CR>
@@ -264,7 +284,7 @@ luafile ~/.config/nvim/keymappings.lua
 
 " Code navigation shortcuts as found in :help lsp
 nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
+" nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
 nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
@@ -298,18 +318,9 @@ snoremap kj <Esc>         " Remap in Select mode
 " cnoremap ö <C-C>         " Remap in Command-line mode
 " onoremap ö <esc>         " Remap in Operator pending mode
 
-" use <Tab> as trigger keys
-" imap <Tab> <Plug>(completion_smart_tab)
-" imap <S-Tab> <Plug>(completion_smart_s_tab)
-
 " have a fixed column for the diagnostics to appear in
 " this removes the jitter when warnings/errors flow in
-set signcolumn=yes
 set statusline+=%{FugitiveStatusline()}
-highlight! link SignColumn LineNr
-highlight DiffAdd guifg=#81A1C1 guibg = none
-highlight DiffChange guifg =#3A3E44 guibg = none
-highlight DiffModified guifg = #81A1C1 guibg = none
 
 " if !exists('g:airline_symbols')
 "   let g:airline_symbols = {}
@@ -338,11 +349,11 @@ endif
 " 300ms of no cursor movement to trigger CursorHold
 set updatetime=300
 " Show diagnostic popup on cursor hover
-autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
+" autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
 
 " Goto previous/next diagnostic warning/error
-nnoremap <silent> g[ <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
-nnoremap <silent> g] <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+" nnoremap <silent> g[ <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+" nnoremap <silent> g] <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
 
 " Enable type inlay hints
 autocmd CursorMoved,InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs
