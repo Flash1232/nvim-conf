@@ -4,6 +4,8 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
 Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 Plug 'onsails/lspkind-nvim'
+Plug 'kyazdani42/nvim-tree.lua'
+Plug 'kyazdani42/nvim-web-devicons'
 
 Plug 'anott03/nvim-lspinstall'
 Plug 'alexaandru/nvim-lspupdate', { 'branch': 'main' }
@@ -15,9 +17,8 @@ Plug 'nvim-lua/lsp-status.nvim'
 " Plug 'ryanoasis/vim-devicons'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
-Plug 'nvim-treesitter/playground'
-Plug 'jiangmiao/auto-pairs'
-Plug 'mhinz/vim-startify'
+" Plug 'nvim-treesitter/playground'
+Plug 'windwp/nvim-autopairs'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -30,8 +31,10 @@ Plug 'cdelledonne/vim-cmake'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'tami5/sql.nvim'
 " Plug 'nvim-telescope/telescope-media-files.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
+Plug 'nvim-telescope/telescope-frecency.nvim'
 Plug 'BurntSushi/ripgrep'
 " Plug 'sharkdp/fd'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
@@ -60,6 +63,7 @@ set cindent smartindent
 " set guioptions-=T " Remove toolbar"
 set backspace=2 " Backspace over newlines
 set nofoldenable
+set termguicolors " this variable must be enabled for colors to be applied properly
 " set ttyfast
 " https://github.com/vim/vim/issues/1735#issuecomment-383353563
 set lazyredraw
@@ -97,6 +101,9 @@ local nvim_lsp = require'lspconfig'
 -- Setup lsp-status
 local lsp_status = require'lsp-status'
 lsp_status.register_progress()
+
+-- Enable nvim-autopairs
+require'nvim-autopairs'.setup()
 
 -- Setup lspsaga
 require'lspsaga'.init_lsp_saga()
@@ -156,7 +163,7 @@ require'telescope'.setup{
 
     file_previewer   = require'telescope.previewers'.vim_buffer_cat.new,
     grep_previewer   = require'telescope.previewers'.vim_buffer_vimgrep.new,
-    qflist_previewer   = require'telescope.previewers'.vim_buffer_qflist.new,
+    qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
   },
   extensions = {
     fzy_native = {
@@ -166,6 +173,7 @@ require'telescope'.setup{
   }
 }
 require'telescope'.load_extension('fzy_native')
+require'telescope'.load_extension('frecency')
 -- require'telescope'.load_extension('media_files')
 
 -- Setup compe
@@ -208,8 +216,10 @@ function! LspStatus() abort
   return ''
 endfunction
 
-" let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+
+luafile keymappings.lua
 
 " Code navigation shortcuts as found in :help lsp
 nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
@@ -256,6 +266,9 @@ snoremap kj <Esc>         " Remap in Select mode
 set signcolumn=yes
 set statusline+=%{FugitiveStatusline()}
 highlight! link SignColumn LineNr
+highlight DiffAdd guifg=#81A1C1 guibg = none
+highlight DiffChange guifg =#3A3E44 guibg = none
+highlight DiffModified guifg = #81A1C1 guibg = none
 
 " if !exists('g:airline_symbols')
 "   let g:airline_symbols = {}
