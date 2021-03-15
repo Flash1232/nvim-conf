@@ -6,6 +6,7 @@ Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 Plug 'onsails/lspkind-nvim'
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'kyazdani42/nvim-web-devicons'
+Plug 'liuchengxu/vim-which-key'
 
 Plug 'anott03/nvim-lspinstall'
 Plug 'alexaandru/nvim-lspupdate', { 'branch': 'main' }
@@ -48,6 +49,7 @@ Plug 'rhysd/git-messenger.vim'
 
 call plug#end()
 
+color default
 syntax enable
 filetype plugin indent on
 
@@ -59,6 +61,8 @@ set shortmess+=c
 set cindent shiftwidth=2
 set cindent autoindent
 set cindent smartindent
+
+highlight Pmenu guibg=brown gui=bold
 
 " set guioptions-=T " Remove toolbar"
 set backspace=2 " Backspace over newlines
@@ -219,7 +223,10 @@ endfunction
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
-luafile keymappings.lua
+nnoremap <silent> <leader> :<c-u>WhichKey '<leader>'<CR>
+vnoremap <silent> <leader> :silent <c-u> :silent WhichKeyVisual '<leader>'<CR>
+
+luafile ~/.config/nvim/keymappings.lua
 
 " Code navigation shortcuts as found in :help lsp
 nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
