@@ -22,6 +22,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend upda
 Plug 'windwp/nvim-autopairs'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'christianchiarulli/nvcode-color-schemes.vim'
 
 Plug 'cespare/vim-toml'
 Plug 'stephpy/vim-yaml'
@@ -49,9 +50,9 @@ Plug 'rhysd/git-messenger.vim'
 
 call plug#end()
 
-color default
 syntax enable
 filetype plugin indent on
+colorscheme snazzy
 
 set completeopt=menuone,noinsert,noselect
 
@@ -67,7 +68,11 @@ highlight Pmenu guibg=brown gui=bold
 " set guioptions-=T " Remove toolbar"
 set backspace=2 " Backspace over newlines
 set nofoldenable
-set termguicolors " this variable must be enabled for colors to be applied properly
+let g:nvcode_termcolors=256
+if (has("termguicolors"))
+  set termguicolors
+  hi LineNr ctermbg=NONE guibg=NONE
+endif
 " set ttyfast
 " https://github.com/vim/vim/issues/1735#issuecomment-383353563
 set lazyredraw
@@ -111,6 +116,33 @@ require'nvim-autopairs'.setup()
 
 -- Setup lspsaga
 require'lspsaga'.init_lsp_saga()
+
+-- symbols for autocomplete
+require'lspkind'.init({
+    with_text = false,
+    symbol_map = {
+      Text = '  ',
+      Method = '  ',
+      Function = '  ',
+      Constructor = '  ',
+      Variable = '[]',
+      Class = '  ',
+      Interface = ' 蘒',
+      Module = '  ',
+      Property = '  ',
+      Unit = ' 塞 ',
+      Value = '  ',
+      Enum = ' 練',
+      Keyword = '  ',
+      Snippet = '  ',
+      Color = '',
+      File = '',
+      Folder = ' ﱮ ',
+      EnumMember = '  ',
+      Constant = '  ',
+      Struct = '  '
+    },
+})
 
 -- Setup nvim_treesitter
 require'nvim-treesitter.configs'.setup {
@@ -221,6 +253,8 @@ function! LspStatus() abort
 endfunction
 
 let g:airline_powerline_fonts = 1
+" let g:airline_theme = 'onedark'
+set noshowmode
 let g:airline#extensions#tabline#enabled = 1
 
 nnoremap <silent> <leader> :<c-u>WhichKey '<leader>'<CR>
@@ -283,6 +317,7 @@ highlight DiffModified guifg = #81A1C1 guibg = none
 " let g:airline_symbols.space = "\ua0"
 
 " Prevent accidental writes to buffers that shouldn't be edited
+autocmd BufRead *.ori set readonly
 autocmd BufRead *.orig set readonly
 autocmd BufRead *.pacnew set readonly
 
