@@ -281,6 +281,7 @@ nnoremap <silent> <leader> :<c-u>WhichKey '<leader>'<CR>
 vnoremap <silent> <leader> :silent <c-u> :silent WhichKeyVisual '<leader>'<CR>
 
 luafile ~/.config/nvim/keymappings.lua
+luafile ~/.config/nvim/nvim_tree.lua
 
 " Code navigation shortcuts as found in :help lsp
 nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
