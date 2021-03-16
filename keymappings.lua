@@ -1,5 +1,5 @@
 vim.g.mapleader = ";"
-vim.api.nvim_set_keymap('i', '<C-e>', '<C-o>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<C-d>', '<C-o>', { noremap = true, silent = true })
 
 -- Reload all files in buffers
 vim.api.nvim_set_keymap("n", "<leader>r", ":bufdo e!<CR>", { noremap = true })
