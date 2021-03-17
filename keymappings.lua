@@ -1,11 +1,14 @@
+vim.api.nvim_set_keymap('n', ';', '<NOP>', { noremap = true, silent = true })
 vim.g.mapleader = ";"
 vim.api.nvim_set_keymap('i', '<C-d>', '<C-o>', { noremap = true, silent = true })
 
 -- Reload all files in buffers
 vim.api.nvim_set_keymap("n", "<leader>r", ":bufdo e!<CR>", { noremap = true })
 
--- Lspsaga keymaps
+-- Telescope keymaps
 vim.api.nvim_set_keymap("n", "<leader><leader>", "<Cmd>lua require('telescope').extensions.frecency.frecency()<CR>", {noremap = true, silent = true})
+
+-- Lspsaga keymaps
 vim.api.nvim_set_keymap("n", "ca", ":Lspsaga code_action<CR>", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("n", "K", ":Lspsaga hover_doc<CR>", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("n", "<C-p>", ":Lspsaga diagnostic_jump_prev<CR>", {noremap = true, silent = true})
@@ -19,6 +22,23 @@ vim.api.nvim_set_keymap('t', '<leader>tc', '<C-\\><C-n>:Lspsaga close_floaterm<C
 
 -- NvimTree keymaps
 vim.api.nvim_set_keymap('n', '<leader>e', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
+
+-- nvim_comment keymaps
+vim.api.nvim_set_keymap("n", "<leader>/", ":CommentToggle<CR>", {noremap=true, silent = true})
+vim.api.nvim_set_keymap("v", "<leader>/", ":CommentToggle<CR>", {noremap=true, silent = true})
+
+-- No hl
+vim.api.nvim_set_keymap('n', '<Leader>h', ':set hlsearch!<CR>', { noremap = true, silent = true })
+
+-- far keymaps
+vim.api.nvim_set_keymap("n", "<Find-Shortcut>", ":Farf<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "<Find-Shortcut>", ":Farf<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<Replace-Shortcut>", ":Farr<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "<Replace-Shortcut>", ":Farr<CR>", { noremap = true, silent = true })
+
+-- quick-scope config
+vim.g.qs_highlight_on_keys = {'f', 'F', 't', 'T'}
+vim.g.qs_max_chars=150
 
 -- Tab switch buffer
 vim.api.nvim_set_keymap('n', '<TAB>', ':bnext<CR>', { noremap = true, silent = true })

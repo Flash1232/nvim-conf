@@ -23,6 +23,7 @@ Plug 'windwp/nvim-autopairs'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'christianchiarulli/nvcode-color-schemes.vim'
+Plug 'psliwka/vim-smoothie'
 
 Plug 'cespare/vim-toml'
 Plug 'stephpy/vim-yaml'
@@ -41,10 +42,14 @@ Plug 'BurntSushi/ripgrep'
 " Plug 'sharkdp/fd'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
 Plug 'junegunn/fzf.vim'
+Plug 'brooth/far.vim'
+Plug 'unblevable/quick-scope'
 
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
+Plug 'terrortylor/nvim-comment'
+Plug 'andymass/vim-matchup'
 Plug 'junegunn/gv.vim'
 Plug 'rhysd/git-messenger.vim'
 
@@ -95,6 +100,8 @@ endif
 " set ttyfast
 " https://github.com/vim/vim/issues/1735#issuecomment-383353563
 set lazyredraw
+set regexpengine=1
+set ignorecase smartcase
 set synmaxcol=500
 set laststatus=2
 set number " Also show current absolute line
@@ -233,6 +240,23 @@ require'telescope'.load_extension('fzy_native')
 require'telescope'.load_extension('frecency')
 -- require'telescope'.load_extension('media_files')
 
+-- Other useful language servers
+require'lspconfig'.bashls.setup{}
+require'lspconfig'.yamlls.setup{}
+require'lspconfig'.pyright.setup{}
+require'lspconfig'.jsonls.setup {
+  commands = {
+    Format = {
+      function()
+        vim.lsp.buf.range_formatting({},{0,0},{vim.fn.line("$"),0})
+      end
+    }
+  }
+}
+
+-- nvim_comment setup
+require('nvim_comment').setup()
+
 -- Setup compe
 require'compe'.setup {
   enabled = true;
@@ -277,11 +301,9 @@ let g:airline_powerline_fonts = 1
 " let g:airline_theme = 'onedark'
 let g:airline#extensions#tabline#enabled = 1
 
-nnoremap <silent> <leader> :<c-u>WhichKey '<leader>'<CR>
-vnoremap <silent> <leader> :silent <c-u> :silent WhichKeyVisual '<leader>'<CR>
-
 luafile ~/.config/nvim/keymappings.lua
 luafile ~/.config/nvim/nvim_tree.lua
+source ~/.config/nvim/which_key.vim
 
 " Code navigation shortcuts as found in :help lsp
 nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
