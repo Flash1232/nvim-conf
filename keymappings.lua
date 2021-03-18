@@ -16,6 +16,7 @@ vim.api.nvim_set_keymap("n", "<C-n>", ":Lspsaga diagnostic_jump_next<CR>", {nore
 vim.api.nvim_set_keymap("n", "<C-f>", "<Cmd>lua require'lspsaga.action'.smart_scroll_with_saga(1)<CR>", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("n", "<C-b>", "<Cmd>lua require'lspsaga.action'.smart_scroll_with_saga(-1)<CR>", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("n", "<C-h>", ":Lspsaga signature_help<CR>", {noremap = true, silent = true})
+vim.api.nvim_set_keymap("n", "<C-j>", ":Lspsaga lsp_finder<CR>", {noremap = true, silent = true})
 vim.api.nvim_set_keymap("n", "<C-r><C-r>", ":Lspsaga rename<CR>", {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>to', ':Lspsaga open_floaterm<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('t', '<leader>tc', '<C-\\><C-n>:Lspsaga close_floaterm<CR>', { noremap = true, silent = true })

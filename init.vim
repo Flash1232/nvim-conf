@@ -130,6 +130,19 @@ set mouse=a " Enable mouse usage (all modes) in terminals
 set clipboard="unnamedplus"
 set incsearch
 
+" Turn on backup option
+set backup
+" Where to store backups
+set backupdir=~/.local/share/nvim/backup
+" Make backup before overwriting the current buffer
+set writebackup
+" Overwrite the original backup file
+if (!isdirectory('.git'))
+  set backupcopy=yes
+endif
+" Meaningful backup name, ex: filename@2015-04-05.14:59
+au BufWritePre * let &bex = '@' . strftime("%F.%H:%M")
+
 " No arrow keys --- force yourself to use the home row
 nnoremap <up> <nop>
 nnoremap <down> <nop>
