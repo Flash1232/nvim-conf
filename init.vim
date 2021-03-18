@@ -61,7 +61,7 @@ Plug 'unblevable/quick-scope'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-rhubarb'
-Plug 'terrortylor/nvim-comment'
+Plug 'terrortylor/nvim-comment', { 'branch': 'main' }
 Plug 'andymass/vim-matchup'
 Plug 'junegunn/gv.vim'
 Plug 'rhysd/git-messenger.vim'
@@ -255,10 +255,12 @@ require'telescope'.load_extension('fzy_native')
 require'telescope'.load_extension('frecency')
 -- require'telescope'.load_extension('media_files')
 
--- Other useful language servers
+-- Other useful language servers (do a loop plz!)
 require'lspconfig'.bashls.setup{}
 require'lspconfig'.yamlls.setup{}
 require'lspconfig'.pyright.setup{}
+require'lspconfig'.dockerls.setup{}
+require'lspconfig'.vimls.setup{}
 require'lspconfig'.jsonls.setup {
   commands = {
     Format = {
