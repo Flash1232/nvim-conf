@@ -303,6 +303,7 @@ let g:airline#extensions#tabline#enabled = 1
 
 luafile ~/.config/nvim/keymappings.lua
 luafile ~/.config/nvim/nvim_tree.lua
+luafile ~/.config/nvim/luals.lua
 source ~/.config/nvim/which_key.vim
 
 " Code navigation shortcuts as found in :help lsp
