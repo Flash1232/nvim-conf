@@ -2,6 +2,9 @@ call plug#begin(stdpath('data') . '/plugged')
 
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
+" Plug 'hrsh7th/vim-vsnip'
+" Plug 'hrsh7th/vim-vsnip-integ'
+" Plug 'honza/vim-snippets'
 Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 Plug 'onsails/lspkind-nvim'
 Plug 'kyazdani42/nvim-tree.lua'
@@ -11,14 +14,17 @@ Plug 'liuchengxu/vim-which-key'
 Plug 'anott03/nvim-lspinstall'
 Plug 'alexaandru/nvim-lspupdate', { 'branch': 'main' }
 " Plug 'mattn/vim-lsp-settings'
+" Plug 'mfussenegger/nvim-dap'
 
 " Extentions to built-in LSP, for example, providing type inlay hints
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'nvim-lua/lsp-status.nvim'
 " Plug 'ryanoasis/vim-devicons'
+" Plug 'romgrk/barbar.nvim'  " REEEEEALLY NICE TABS!!!
 
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }  " We recommend updating the parsers on update
 " Plug 'nvim-treesitter/playground'
+" Plug 'p00f/nvim-ts-rainbow'
 Plug 'windwp/nvim-autopairs'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -27,10 +33,15 @@ Plug 'psliwka/vim-smoothie'
 
 Plug 'cespare/vim-toml'
 Plug 'stephpy/vim-yaml'
+Plug 'gennaro-tedesco/nvim-jqx'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 " Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'cdelledonne/vim-cmake'
+Plug 'turbio/bracey.vim', { 'do': 'npm install --prefix server' }
+Plug 'junegunn/goyo.vim'
 
+Plug 'metakirby5/codi.vim'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
@@ -44,6 +55,8 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'brooth/far.vim'
 Plug 'unblevable/quick-scope'
+" Plug 'kevinhwang91/nvim-bqf'  " Better quickfix windows
+" Plug 'airblade/vim-rooter'
 
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
@@ -52,6 +65,7 @@ Plug 'terrortylor/nvim-comment'
 Plug 'andymass/vim-matchup'
 Plug 'junegunn/gv.vim'
 Plug 'rhysd/git-messenger.vim'
+" Plug 'lewis6991/gitsigns.nvim'
 
 call plug#end()
 
@@ -104,6 +118,7 @@ set regexpengine=1
 set ignorecase smartcase
 set synmaxcol=500
 set laststatus=2
+set relativenumber
 set number " Also show current absolute line
 set diffopt+=iwhite " No whitespace in vimdiff
 " Make diffing better: https://vimways.org/2018/the-power-of-diff/
