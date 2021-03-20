@@ -1,3 +1,5 @@
+vim.o.splitbelow=true
+vim.o.splitright=true
 vim.api.nvim_set_keymap('n', ';', '<NOP>', { noremap = true, silent = true })
 vim.g.mapleader = ";"
 vim.api.nvim_set_keymap('i', '<C-d>', '<C-o>', { noremap = true, silent = true })

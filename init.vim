@@ -23,6 +23,7 @@ Plug 'nvim-lua/lsp-status.nvim'
 " Plug 'romgrk/barbar.nvim'  " REEEEEALLY NICE TABS!!!
 
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }  " We recommend updating the parsers on update
+" Plug 'nvim-treesitter/nvim-treesitter-refactor'
 " Plug 'nvim-treesitter/playground'
 " Plug 'p00f/nvim-ts-rainbow'
 Plug 'windwp/nvim-autopairs'
@@ -40,6 +41,7 @@ Plug 'rhysd/vim-clang-format'
 Plug 'cdelledonne/vim-cmake'
 Plug 'turbio/bracey.vim', { 'do': 'npm install --prefix server' }
 Plug 'junegunn/goyo.vim'
+Plug 'tpope/vim-sleuth'
 
 Plug 'metakirby5/codi.vim'
 Plug 'nvim-lua/popup.nvim'
@@ -367,6 +369,18 @@ inoremap kj <Esc>
 vnoremap kj <Esc>         " Remap in Visual and Select mode
 xnoremap kj <Esc>         " Remap in Visual mode
 snoremap kj <Esc>         " Remap in Select mode
+
+cnoremap jj <Esc> 
+inoremap jj <Esc>
+vnoremap jj <Esc>         " Remap in Visual and Select mode
+xnoremap jj <Esc>         " Remap in Visual mode
+snoremap jj <Esc>         " Remap in Select mode
+
+cnoremap jk <Esc> 
+inoremap jk <Esc>
+vnoremap jk <Esc>         " Remap in Visual and Select mode
+xnoremap jk <Esc>         " Remap in Visual mode
+snoremap jk <Esc>         " Remap in Select mode
 " cnoremap ö <C-C>         " Remap in Command-line mode
 " onoremap ö <esc>         " Remap in Operator pending mode
 
