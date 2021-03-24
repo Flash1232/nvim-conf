@@ -11,10 +11,13 @@ Plug 'kyazdani42/nvim-tree.lua'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'liuchengxu/vim-which-key'
 
-Plug 'anott03/nvim-lspinstall'
+" Plug 'anott03/nvim-lspinstall'
+Plug 'kabouzeid/nvim-lspinstall', { 'branch': 'main' }
 Plug 'alexaandru/nvim-lspupdate', { 'branch': 'main' }
 " Plug 'mattn/vim-lsp-settings'
 " Plug 'mfussenegger/nvim-dap'
+
+" Plug 'jesseduffield/lazydocker'
 
 " Extentions to built-in LSP, for example, providing type inlay hints
 Plug 'nvim-lua/lsp_extensions.nvim'
@@ -26,6 +29,7 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }  " We recommend up
 " Plug 'nvim-treesitter/nvim-treesitter-refactor'
 " Plug 'nvim-treesitter/playground'
 " Plug 'p00f/nvim-ts-rainbow'
+Plug 'sheerun/vim-polyglot'
 Plug 'windwp/nvim-autopairs'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -42,6 +46,7 @@ Plug 'cdelledonne/vim-cmake'
 Plug 'turbio/bracey.vim', { 'do': 'npm install --prefix server' }
 Plug 'junegunn/goyo.vim'
 Plug 'tpope/vim-sleuth'
+Plug 'gennaro-tedesco/nvim-peekup'
 
 Plug 'metakirby5/codi.vim'
 Plug 'nvim-lua/popup.nvim'
@@ -159,6 +164,11 @@ nnoremap <right> :bn<CR>
 nnoremap j gj
 nnoremap k gk
 
+luafile ~/.config/nvim/luals.lua
+luafile ~/.config/nvim/keymappings.lua
+luafile ~/.config/nvim/nvim_tree.lua
+source ~/.config/nvim/which_key.vim
+
 lua <<EOF
 -- nvim_lsp object
 local nvim_lsp = require'lspconfig'
@@ -269,11 +279,11 @@ require'telescope'.load_extension('frecency')
 -- require'telescope'.load_extension('media_files')
 
 -- Other useful language servers (do a loop plz!)
-require'lspconfig'.bashls.setup{}
-require'lspconfig'.yamlls.setup{}
-require'lspconfig'.pyright.setup{}
-require'lspconfig'.dockerls.setup{}
-require'lspconfig'.vimls.setup{}
+-- require'lspconfig'.bashls.setup{}
+-- require'lspconfig'.yamlls.setup{}
+-- require'lspconfig'.pyright.setup{}
+-- require'lspconfig'.dockerls.setup{}
+-- require'lspconfig'.vimls.setup{}
 require'lspconfig'.jsonls.setup {
   commands = {
     Format = {
@@ -316,6 +326,23 @@ require'compe'.setup {
     treesitter = true;
   };
 }
+
+-- nvim-lspinstall
+local function setup_servers()
+  require'lspinstall'.setup()
+  local servers = require'lspinstall'.installed_servers()
+  for _, server in pairs(servers) do
+    require'lspconfig'[server].setup{}
+  end
+end
+
+setup_servers()
+
+-- Automatically reload after `:LspInstall <server>` so we don't have to restart neovim
+require'lspinstall'.post_install_hook = function ()
+  setup_servers() -- reload installed servers
+  vim.cmd("bufdo e") -- this triggers the FileType autocmd that starts the server
+end
 EOF
 
 " Statusline
@@ -330,11 +357,6 @@ endfunction
 let g:airline_powerline_fonts = 1
 " let g:airline_theme = 'onedark'
 let g:airline#extensions#tabline#enabled = 1
-
-luafile ~/.config/nvim/keymappings.lua
-luafile ~/.config/nvim/nvim_tree.lua
-luafile ~/.config/nvim/luals.lua
-source ~/.config/nvim/which_key.vim
 
 " Code navigation shortcuts as found in :help lsp
 " nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
@@ -372,15 +394,15 @@ snoremap kj <Esc>         " Remap in Select mode
 
 cnoremap jj <Esc> 
 inoremap jj <Esc>
-vnoremap jj <Esc>         " Remap in Visual and Select mode
-xnoremap jj <Esc>         " Remap in Visual mode
-snoremap jj <Esc>         " Remap in Select mode
+" vnoremap jj <Esc>         " Remap in Visual and Select mode
+" xnoremap jj <Esc>         " Remap in Visual mode
+" snoremap jj <Esc>         " Remap in Select mode
 
 cnoremap jk <Esc> 
 inoremap jk <Esc>
-vnoremap jk <Esc>         " Remap in Visual and Select mode
-xnoremap jk <Esc>         " Remap in Visual mode
-snoremap jk <Esc>         " Remap in Select mode
+" vnoremap jk <Esc>         " Remap in Visual and Select mode
+" xnoremap jk <Esc>         " Remap in Visual mode
+" snoremap jk <Esc>         " Remap in Select mode
 " cnoremap ö <C-C>         " Remap in Command-line mode
 " onoremap ö <esc>         " Remap in Operator pending mode
 
