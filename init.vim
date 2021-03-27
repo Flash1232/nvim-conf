@@ -164,7 +164,7 @@ nnoremap <right> :bn<CR>
 nnoremap j gj
 nnoremap k gk
 
-luafile ~/.config/nvim/luals.lua
+" luafile ~/.config/nvim/luals.lua
 luafile ~/.config/nvim/keymappings.lua
 luafile ~/.config/nvim/nvim_tree.lua
 source ~/.config/nvim/which_key.vim
@@ -223,19 +223,19 @@ local on_attach = function(client)
   lsp_status.on_attach(client)
 end
 
-nvim_lsp.rust_analyzer.setup({
-  on_attach = on_attach,
-  settings = {
-    ['rust-analyzer'] = {
-      checkOnSave = {
-        extraArgs = {
-          "--target-dir", "/tmp/rust-analyzer-check"
-        }
-      }
-    }
-  },
-  capabilities = lsp_status.capabilities
-})
+-- nvim_lsp.rust_analyzer.setup({
+--   on_attach = on_attach,
+--   settings = {
+--     ['rust-analyzer'] = {
+--       checkOnSave = {
+--         extraArgs = {
+--           "--target-dir", "/tmp/rust-analyzer-check"
+--         }
+--       }
+--     }
+--   },
+--   capabilities = lsp_status.capabilities
+-- })
 
 -- Setup ClangD
 nvim_lsp.clangd.setup{
@@ -332,7 +332,25 @@ local function setup_servers()
   require'lspinstall'.setup()
   local servers = require'lspinstall'.installed_servers()
   for _, server in pairs(servers) do
-    require'lspconfig'[server].setup{}
+    if server == 'rust_analyzer' then
+      nvim_lsp.rust_analyzer.setup({
+        on_attach = on_attach,
+        settings = {
+          ['rust-analyzer'] = {
+            checkOnSave = {
+              extraArgs = {
+                "--target-dir", "/tmp/rust-analyzer-check"
+              }
+            }
+          }
+        },
+        capabilities = lsp_status.capabilities
+      })
+    elseif server == 'sumneko_lua' then
+
+    else
+      nvim_lsp[server].setup{}
+    end
   end
 end
 
