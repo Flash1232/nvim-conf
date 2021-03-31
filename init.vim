@@ -12,7 +12,7 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'liuchengxu/vim-which-key'
 
 " Plug 'anott03/nvim-lspinstall'
-Plug 'kabouzeid/nvim-lspinstall', { 'branch': 'main' }
+Plug 'kabouzeid/nvim-lspinstall', { 'branch': 'main' } " maybe only use lspupdate ?
 Plug 'alexaandru/nvim-lspupdate', { 'branch': 'main' }
 " Plug 'mattn/vim-lsp-settings'
 " Plug 'mfussenegger/nvim-dap'
@@ -238,14 +238,14 @@ end
 -- })
 
 -- Setup ClangD
-nvim_lsp.clangd.setup{
-  handlers = lsp_status.extensions.clangd.setup(),
-  init_options = {
-    clangdFileStatus = true
-  },
-  on_attach = lsp_status.on_attach,
-  capabilities = lsp_status.capabilities
-}
+-- nvim_lsp.clangd.setup{
+--   handlers = lsp_status.extensions.clangd.setup(),
+--   init_options = {
+--     clangdFileStatus = true
+--   },
+--   on_attach = lsp_status.on_attach,
+--   capabilities = lsp_status.capabilities
+-- }
 
 -- Enable Rust diagnostics
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -346,9 +346,16 @@ local function setup_servers()
         },
         capabilities = lsp_status.capabilities
       })
-    elseif server == 'sumneko_lua' then
-
-    else
+    elseif server == 'clangd' then
+      nvim_lsp.clangd.setup {
+        handlers = lsp_status.extensions.clangd.setup(),
+        init_options = {
+          clangdFileStatus = true
+        },
+        on_attach = lsp_status.on_attach,
+        capabilities = lsp_status.capabilities
+      }
+    elseif server ~= 'sumneko_lua' then
       nvim_lsp[server].setup{}
     end
   end
