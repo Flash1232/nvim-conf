@@ -35,6 +35,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'christianchiarulli/nvcode-color-schemes.vim'
 Plug 'psliwka/vim-smoothie'
+Plug 'ChristianChiarulli/dashboard-nvim'
 
 Plug 'cespare/vim-toml'
 Plug 'stephpy/vim-yaml'
@@ -47,13 +48,14 @@ Plug 'turbio/bracey.vim', { 'do': 'npm install --prefix server' }
 Plug 'junegunn/goyo.vim'
 Plug 'tpope/vim-sleuth'
 Plug 'gennaro-tedesco/nvim-peekup'
+" Plug 'p00f/nvim-ts-rainbow'
 
 Plug 'metakirby5/codi.vim'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'tami5/sql.nvim'
-" Plug 'nvim-telescope/telescope-media-files.nvim'
+Plug 'nvim-telescope/telescope-media-files.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'nvim-telescope/telescope-frecency.nvim'
 Plug 'BurntSushi/ripgrep'
@@ -85,6 +87,7 @@ set hidden
 set nowrap
 set whichwrap+=<,>,[,],h,l
 set iskeyword+=-
+set inccommand=split
 
 " Avoid showing extra messages when using completion
 set shortmess+=c
@@ -134,7 +137,7 @@ set diffopt+=indent-heuristic
 set colorcolumn=100 " and give me a colored column
 set showcmd " Show (partial) command in status line.
 set mouse=a " Enable mouse usage (all modes) in terminals
-set clipboard="unnamedplus"
+set clipboard+=unnamedplus
 set incsearch
 
 " Turn on backup option
@@ -167,6 +170,7 @@ nnoremap k gk
 " luafile ~/.config/nvim/luals.lua
 luafile ~/.config/nvim/keymappings.lua
 luafile ~/.config/nvim/nvim_tree.lua
+luafile ~/.config/nvim/dash.lua
 source ~/.config/nvim/which_key.vim
 
 lua <<EOF
@@ -212,10 +216,12 @@ require'lspkind'.init({
 
 -- Setup nvim_treesitter
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   highlight = {
       enable = true              -- false will disable the whole extension
   },
+--  rainbow = { enable = true },
+  autotag = { enable = true }
 }
 
 -- Enable rust_analyzer
@@ -271,12 +277,16 @@ require'telescope'.setup{
     fzy_native = {
       override_generic_sorter = false,
       override_file_sorter = true,
+    },
+    media_files = {
+      filetypes = { "png", "webp", "jpg", "jpeg" },
+      find_cmd = "rg"
     }
   }
 }
 require'telescope'.load_extension('fzy_native')
 require'telescope'.load_extension('frecency')
--- require'telescope'.load_extension('media_files')
+require'telescope'.load_extension('media_files')
 
 -- Other useful language servers (do a loop plz!)
 -- require'lspconfig'.bashls.setup{}
